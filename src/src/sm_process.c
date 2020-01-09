@@ -1,5 +1,3 @@
-/* $Xorg: sm_process.c,v 1.4 2001/02/09 02:03:30 xorgcvs Exp $ */
-
 /*
 
 Copyright 1993, 1998  The Open Group
@@ -25,7 +23,6 @@ used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from The Open Group.
 
 */
-/* $XFree86$ */
 
 /*
  * Author: Ralph Mor, X Consortium
@@ -68,17 +65,9 @@ in this Software without prior written authorization from The Open Group.
 
 
 void
-_SmcProcessMessage (iceConn, clientData, opcode,
-    length, swap, replyWait, replyReadyRet)
-
-IceConn		 iceConn;
-IcePointer	 clientData;
-int		 opcode;
-unsigned long	 length;
-Bool		 swap;
-IceReplyWaitInfo *replyWait;
-Bool		 *replyReadyRet;
-
+_SmcProcessMessage(IceConn iceConn, IcePointer clientData, int opcode,
+		   unsigned long length, Bool swap,
+		   IceReplyWaitInfo *replyWait, Bool *replyReadyRet)
 {
     SmcConn	smcConn = (SmcConn) clientData;
 
@@ -163,7 +152,7 @@ Bool		 *replyReadyRet;
 	{
 	    smRegisterClientReplyMsg 	*pMsg;
 	    char			*pData, *pStart;
-	    _SmcRegisterClientReply 	*reply = 
+	    _SmcRegisterClientReply 	*reply =
 	        (_SmcRegisterClientReply *) (replyWait->reply);
 
 #if 0 /* No-op */
@@ -278,7 +267,7 @@ Bool		 *replyReadyRet;
 	    (*smcConn->phase2_wait->phase2_proc) (smcConn,
 		smcConn->phase2_wait->client_data);
 
-	    free ((char *) smcConn->phase2_wait);
+	    free (smcConn->phase2_wait);
 	    smcConn->phase2_wait  = NULL;
 	}
 	break;
@@ -301,7 +290,7 @@ Bool		 *replyReadyRet;
 	    (*smcConn->interact_waits->interact_proc) (smcConn,
 		smcConn->interact_waits->client_data);
 
-	    free ((char *) smcConn->interact_waits);
+	    free (smcConn->interact_waits);
 	    smcConn->interact_waits = next;
 	}
 	break;
@@ -404,7 +393,7 @@ Bool		 *replyReadyRet;
 	    (*smcConn->prop_reply_waits->prop_reply_proc) (smcConn,
 		smcConn->prop_reply_waits->client_data, numProps, props);
 
-	    free ((char *) smcConn->prop_reply_waits);
+	    free (smcConn->prop_reply_waits);
 	    smcConn->prop_reply_waits = next;
 
 	    IceDisposeCompleteMessage (iceConn, pStart);
@@ -423,14 +412,8 @@ Bool		 *replyReadyRet;
 
 
 void
-_SmsProcessMessage (iceConn, clientData, opcode, length, swap)
-
-IceConn		 iceConn;
-IcePointer       clientData;
-int		 opcode;
-unsigned long	 length;
-Bool		 swap;
-
+_SmsProcessMessage(IceConn iceConn, IcePointer clientData, int opcode,
+		   unsigned long length, Bool swap)
 {
     SmsConn	smsConn = (SmsConn) clientData;
 
@@ -769,7 +752,7 @@ Bool		 swap;
 
 	pData = pStart + 8;
 
-	reasonMsgs = (char **) malloc (count * sizeof (char *));
+	reasonMsgs = malloc (count * sizeof (char *));
 	for (i = 0; i < count; i++)
 	    EXTRACT_ARRAY8_AS_STRING (pData, swap, reasonMsgs[i]);
 
@@ -787,7 +770,7 @@ Bool		 swap;
 	char 			*pData, *pStart;
 	SmProp			**props = NULL;
 	int 			numProps;
-	
+
 #if 0 /* No-op */
 	CHECK_AT_LEAST_SIZE (iceConn, _SmsOpcode, opcode,
 	    length, SIZEOF (smSetPropertiesMsg), IceFatalToProtocol);
@@ -856,7 +839,7 @@ Bool		 swap;
 
 	pData = pStart + 8;
 
-	propNames = (char **) malloc (count * sizeof (char *));
+	propNames = malloc (count * sizeof (char *));
 	for (i = 0; i < count; i++)
 	    EXTRACT_ARRAY8_AS_STRING (pData, swap, propNames[i]);
 

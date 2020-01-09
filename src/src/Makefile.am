@@ -1,14 +1,15 @@
 lib_LTLIBRARIES=libSM.la
 
-AM_CFLAGS= -I${top_srcdir}/include $(SM_CFLAGS) $(XTRANS_CFLAGS)
+AM_CPPFLAGS = -I${top_srcdir}/include
+AM_CFLAGS = $(CWARNFLAGS) $(SM_CFLAGS)
 
 if WITH_LIBUUID
 AM_CFLAGS += $(LIBUUID_CFLAGS) -DHAVE_LIBUUID
 endif
 
-libSM_la_LDFLAGS = -version-number 6:0:0 -no-undefined
+libSM_la_LDFLAGS = -version-number 6:0:1 -no-undefined
 
-libSM_la_LIBADD = $(SM_LIBS) $(XTRANS_LIBS)
+libSM_la_LIBADD = $(SM_LIBS)
 
 if WITH_LIBUUID
 libSM_la_LIBADD += $(LIBUUID_LIBS)
@@ -16,7 +17,6 @@ endif
 
 libSM_la_SOURCES = \
 	SMlibint.h \
-	globals.h \
 	sm_auth.c \
 	sm_client.c \
 	sm_error.c \

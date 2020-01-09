@@ -1,6 +1,3 @@
-/* $XdotOrg: $ */
-/* $Xorg: sm_manager.c,v 1.4 2001/02/09 02:03:30 xorgcvs Exp $ */
-
 /*
 
 Copyright 1993, 1998  The Open Group
@@ -42,9 +39,6 @@ in this Software without prior written authorization from The Open Group.
 #undef shutdown
 #endif
 
-extern IcePaAuthStatus _IcePaMagicCookie1Proc ();
-extern void _SmsProcessMessage ();
-
 
 
 static Status
@@ -74,12 +68,11 @@ _SmsProtocolSetupProc (IceConn    iceConn,
      * Allocate new SmsConn.
      */
 
-    if ((smsConn = (SmsConn) malloc (sizeof (struct _SmsConn))) == NULL)
+    if ((smsConn = malloc (sizeof (struct _SmsConn))) == NULL)
     {
 	const char *str = "Memory allocation failed";
 
-	if ((*failureReasonRet = (char *) malloc (strlen (str) + 1)) != NULL)
-	    strcpy (*failureReasonRet, str);
+	*failureReasonRet = strdup (str);
 
 	return (0);
     }
@@ -117,17 +110,10 @@ _SmsProtocolSetupProc (IceConn    iceConn,
 
 
 Status
-SmsInitialize (vendor, release, newClientProc, managerData,
-    hostBasedAuthProc, errorLength, errorStringRet)
-
-char 		 		*vendor;
-char 		 		*release;
-SmsNewClientProc 		newClientProc;
-SmPointer	 		managerData;
-IceHostBasedAuthProc		hostBasedAuthProc;
-int  		 		errorLength;
-char 		 		*errorStringRet;
-
+SmsInitialize(const char *vendor, const char *release,
+	      SmsNewClientProc newClientProc,
+	      SmPointer managerData, IceHostBasedAuthProc hostBasedAuthProc,
+	      int errorLength, char *errorStringRet)
 {
     const char *auth_names[] = {"MIT-MAGIC-COOKIE-1"};
     IcePaAuthProc auth_procs[] = {_IcePaMagicCookie1Proc};
@@ -186,10 +172,7 @@ char 		 		*errorStringRet;
 
 
 char *
-SmsClientHostName (smsConn)
-
-SmsConn smsConn;
-
+SmsClientHostName(SmsConn smsConn)
 {
     return (IceGetPeerName (smsConn->iceConn));
 }
@@ -197,23 +180,17 @@ SmsConn smsConn;
 
 
 Status
-SmsRegisterClientReply (smsConn, clientId)
-
-SmsConn smsConn;
-char	*clientId;
-
+SmsRegisterClientReply(SmsConn smsConn, char *clientId)
 {
     IceConn			iceConn = smsConn->iceConn;
     int				extra;
     smRegisterClientReplyMsg 	*pMsg;
     char 			*pData;
 
-    if ((smsConn->client_id = (char *) malloc (strlen (clientId) + 1)) == NULL)
+    if ((smsConn->client_id = strdup (clientId)) == NULL)
     {
 	return (0);
     }
-
-    strcpy (smsConn->client_id, clientId);
 
     extra = ARRAY8_BYTES (strlen (clientId));
 
@@ -231,14 +208,8 @@ char	*clientId;
 
 
 void
-SmsSaveYourself (smsConn, saveType, shutdown, interactStyle, fast)
-
-SmsConn smsConn;
-int	saveType;
-Bool 	shutdown;
-int	interactStyle;
-Bool	fast;
-
+SmsSaveYourself(SmsConn smsConn, int saveType, Bool shutdown,
+		int interactStyle, Bool fast)
 {
     IceConn		iceConn = smsConn->iceConn;
     smSaveYourselfMsg	*pMsg;
@@ -274,10 +245,7 @@ Bool	fast;
 
 
 void
-SmsSaveYourselfPhase2 (smsConn)
-
-SmsConn smsConn;
-
+SmsSaveYourselfPhase2(SmsConn smsConn)
 {
     IceConn	iceConn = smsConn->iceConn;
 
@@ -288,10 +256,7 @@ SmsConn smsConn;
 
 
 void
-SmsInteract (smsConn)
-
-SmsConn smsConn;
-
+SmsInteract(SmsConn smsConn)
 {
     IceConn	iceConn = smsConn->iceConn;
 
@@ -304,10 +269,7 @@ SmsConn smsConn;
 
 
 void
-SmsDie (smsConn)
-
-SmsConn smsConn;
-
+SmsDie(SmsConn smsConn)
 {
     IceConn	iceConn = smsConn->iceConn;
 
@@ -318,10 +280,7 @@ SmsConn smsConn;
 
 
 void
-SmsSaveComplete (smsConn)
-
-SmsConn smsConn;
-
+SmsSaveComplete(SmsConn smsConn)
 {
     IceConn	iceConn = smsConn->iceConn;
 
@@ -332,10 +291,7 @@ SmsConn smsConn;
 
 
 void
-SmsShutdownCancelled (smsConn)
-
-SmsConn smsConn;
-
+SmsShutdownCancelled(SmsConn smsConn)
 {
     IceConn	iceConn = smsConn->iceConn;
 
@@ -348,12 +304,7 @@ SmsConn smsConn;
 
 
 void
-SmsReturnProperties (smsConn, numProps, props)
-
-SmsConn	smsConn;
-int	numProps;
-SmProp  **props;
-
+SmsReturnProperties(SmsConn smsConn, int numProps, SmProp **props)
 {
     IceConn			iceConn = smsConn->iceConn;
     int 			bytes;
@@ -378,15 +329,12 @@ SmProp  **props;
 
 
 void
-SmsCleanUp (smsConn)
-
-SmsConn smsConn;
-
+SmsCleanUp(SmsConn smsConn)
 {
     IceProtocolShutdown (smsConn->iceConn, _SmsOpcode);
 
     if (smsConn->client_id)
 	free (smsConn->client_id);
 
-    free ((char *) smsConn);
+    free (smsConn);
 }

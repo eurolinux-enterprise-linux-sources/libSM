@@ -1,11 +1,10 @@
 Summary: X.Org X11 SM runtime library
 Name: libSM
-Version: 1.1.0
-Release: 7.1%{?dist}
+Version: 1.2.1
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
 
@@ -14,6 +13,7 @@ BuildRequires: xorg-x11-proto-devel
 BuildRequires: xorg-x11-xtrans-devel >= 1.0.3-4
 BuildRequires: libICE-devel
 BuildRequires: libuuid-devel
+BuildRequires: xmlto
 
 %description
 The X.Org X11 SM (Session Management) runtime library.
@@ -22,9 +22,6 @@ The X.Org X11 SM (Session Management) runtime library.
 Summary: X.Org X11 SM development package
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
-Requires: libICE-devel
-Requires: xorg-x11-proto-devel
-Requires: pkgconfig
 
 %description devel
 The X.Org X11 SM (Session Management) development package.
@@ -45,6 +42,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # We intentionally don't ship *.la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
+# we %%doc these ourselves, later, and only the text versions
+rm -rf $RPM_BUILD_ROOT%{_docdir}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -55,7 +55,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING ChangeLog
 %{_libdir}/libSM.so.6
-%{_libdir}/libSM.so.6.0.0
+%{_libdir}/libSM.so.6.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -67,8 +67,20 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/sm.pc
 
 %changelog
-* Mon Nov 30 2009 Dennis Gregorovic <dgregor@redhat.com> - 1.1.0-7.1
-- Rebuilt for RHEL 6
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Mar 05 2012 Adam Jackson <ajax@redhat.com> 1.2.1-1
+- libSM 1.2.1
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Thu Oct 28 2010 Adam Jackson <ajax@redhat.com> 1.2.0-1
+- libSM 1.2.0
 
 * Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
