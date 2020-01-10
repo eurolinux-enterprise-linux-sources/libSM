@@ -1,7 +1,7 @@
 Summary: X.Org X11 SM runtime library
 Name: libSM
-Version: 1.2.1
-Release: 7%{?dist}
+Version: 1.2.2
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
@@ -70,11 +70,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/sm.pc
 
 %changelog
-* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 1.2.1-7
-- Mass rebuild 2014-01-24
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1.2.1-6
-- Mass rebuild 2013-12-27
+* Fri Jul 25 2014 Benjamin Tissoires <benjamin.tissoires@redhat.com> 1.2.2-1
+- libSM 1.2.2
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Thu Mar 07 2013 Peter Hutterer <peter.hutterer@redhat.com> - 1.2.1-5
 - autoreconf needs xorg-x11-util-macros
